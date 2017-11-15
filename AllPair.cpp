@@ -10,7 +10,21 @@ Graph::Graph(int size){
     for(int i = 0; i<size; i++){
         AdjList* new_adjlist = new AdjList;
         vertices_.push_back(new_adjlist);
+        
+        vector<int> temp;
+        for(int j=0; j<size; j++){
+            if(i==j) {
+                temp.push_back(0);
+            }
+            else{
+                temp.push_back(INT_MAX);
+            }
+        }
+
+        adj_mat_.push_back(temp);
+    
     }
+    
 }
 
 void Graph::addEdge(int src, int dest, int weight ){
@@ -19,6 +33,9 @@ void Graph::addEdge(int src, int dest, int weight ){
 
 	//ListNode* back_nd = new ListNode(dest, src, weight);
 	//vertices_[dest]->push_back(back_nd);
+    
+    //update the adj matrix
+    adj_mat_[src][dest] = weight;
 }
 
 void MinHeap::swapNodes(int a, int b){
@@ -111,6 +128,24 @@ void printDistances(int * dist, int V){
 
 }
 
+void printDistances(vector<vector<int>>& dist){
+
+    int V = (int)dist.size();
+    for(int i=0; i<V; i++){
+        for(int j=0; j<V; j++){
+            if(dist[i][j]==INT_MAX){
+                std::cout << "INF\t" ;
+            }
+            else{
+                std::cout << dist[i][j] << "\t";
+            }
+        }
+        std::cout << "\n";
+    }
+}
+
+
+
 void runDijkstra(Graph* g, int src){
 	int V = g->size_;
 	int dist[V];
@@ -153,4 +188,31 @@ void runDijkstra(Graph* g, int src){
 	printDistances(dist, V);
 
 }
+
+void runFloydWarshall(Graph* g){
+    vector<vector<int>> dist = g->adj_mat_;
+
+    for(int k=0;  k<g->size_; k++){
+        for(int i=0; i<g->size_; i++){
+            for(int j=0; j<g->size_; j++){
+                if(dist[i][k]+dist[k][j]<dist[i][j]){
+                    dist[i][j] = dist[i][k]+dist[k][j];
+                }
+            }
+        }
+    }
+    
+    std::cout << "INPUT : \n";
+    printDistances(g->adj_mat_);
+    std::cout << "OUTPUT : \n";
+    printDistances(dist);
+}
+
+
+
+
+
+
+
+
 

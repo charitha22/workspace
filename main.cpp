@@ -48,6 +48,7 @@ int main(){
 	Graph * g = gen_test_graph(V);
 
 	runDijkstra(g, src);
+    runFloydWarshall(g);
 
 	delete g;
 	return 0;
