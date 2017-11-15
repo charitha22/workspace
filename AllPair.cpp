@@ -14,8 +14,11 @@ Graph::Graph(int size){
 }
 
 void Graph::addEdge(int src, int dest, int weight ){
-    ListNode* new_node = new ListNode(src, dest, weight);
-    vertices_[src]->push_back(new_node);
+    ListNode* fwd_nd = new ListNode(src, dest, weight);
+    vertices_[src]->push_back(fwd_nd);
+
+	//ListNode* back_nd = new ListNode(dest, src, weight);
+	//vertices_[dest]->push_back(back_nd);
 }
 
 void MinHeap::swapNodes(int a, int b){
@@ -97,10 +100,10 @@ bool MinHeap::isInMinHeap(int vid){
 
 void printDistances(int * dist, int V){
 
-	cout << "vertex   distance from source \n";
+	cout << "vertex		distance from source \n";
 
 	for(int i =0; i<V; i++){
-		std::cout  << i << "      " << dist[i] << "\n";
+		std::cout  << i << "\t\t " << dist[i] << "\n";
 	
 	}
 
@@ -118,7 +121,7 @@ void runDijkstra(Graph* g, int src){
 		dist[i] = INT_MAX;
 		HeapNode* nd = new HeapNode(i, dist[i]);
 		heap.nodes.push_back(nd);
-		heap.vertex_to_idx[i] = i;
+		heap.vertex_to_idx.push_back(i);
 	}
 	
 	heap.nodes[src] = new HeapNode(src, dist[src]);
@@ -141,8 +144,8 @@ void runDijkstra(Graph* g, int src){
 				heap.decreaseKey(v, dist[v]);
 			}
 
+			it++;
 		}
-		++it;
 	
 	}
 
