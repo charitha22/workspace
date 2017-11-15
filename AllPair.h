@@ -33,11 +33,11 @@ public :
     MinHeap(int size) : size_(size) { filled_ = 0;}
     int filled_;
     int size_;
-    vector<int> idx_to_vertex; // idx to vertex mapping
+    vector<int> vertex_to_idx; // vertex to idx mapping
     vector<HeapNode*> nodes;
     
-    void swapNodes(HeapNode* a, HeapNode* b);
-    void minHeapify(int index);
+    void swapNodes(int a, int b);
+    void minHeapify(int idx);
     bool isEmpty() {return filled_ == 0;}
     HeapNode* getMin();
     void decreaseKey(int vid, int dist);
@@ -45,4 +45,6 @@ public :
 
 };
 
+void runDijkstra(Graph* g, int src);
+void printDistances(int* dist, int V);
 #endif
