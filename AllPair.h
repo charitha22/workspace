@@ -18,6 +18,7 @@ public:
     Graph(int size);
     int size_; // size of graph
     vector<AdjList*> vertices_; // adjacency list for each vertice
+    vector<ListNode*> edges_;
     vector<vector<int>> adj_mat_;
 
     void addEdge(int src, int dest, int weight);
@@ -48,6 +49,7 @@ public :
 };
 
 void runDijkstra(Graph* g, int src);
+bool runBellmanFord(Graph* g, int src);
 void printDistances(int* dist, int V);
 void printDistances(vector<vector<int>>& dist);
 void runFloydWarshall(Graph* g);

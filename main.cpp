@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <iostream>
 #include "AllPair.h"
 
 
@@ -46,8 +47,11 @@ int main(){
 	int V = 9;
 	int src = 0;
 	Graph * g = gen_test_graph(V);
-
+    
+    std::cout << "INPUT :\n";
+    printDistances(g->adj_mat_);
 	runDijkstra(g, src);
+    runBellmanFord(g, src);
     runFloydWarshall(g);
 
 	delete g;

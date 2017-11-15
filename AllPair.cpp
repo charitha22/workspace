@@ -36,6 +36,7 @@ void Graph::addEdge(int src, int dest, int weight ){
     
     //update the adj matrix
     adj_mat_[src][dest] = weight;
+    edges_.push_back(fwd_nd);
 }
 
 void MinHeap::swapNodes(int a, int b){
@@ -184,7 +185,7 @@ void runDijkstra(Graph* g, int src){
 	
 	}
 
-
+    std::cout << "DIJKSTRA OUTPUT : \n"; 
 	printDistances(dist, V);
 
 }
@@ -202,13 +203,38 @@ void runFloydWarshall(Graph* g){
         }
     }
     
-    std::cout << "INPUT : \n";
-    printDistances(g->adj_mat_);
-    std::cout << "OUTPUT : \n";
+    std::cout << "FLOYDWARSHALL OUTPUT : \n";
     printDistances(dist);
 }
 
 
+bool runBellmanFord(Graph* g, int src){
+    int V = g->size_;
+    int dist[V];
+
+    for(int i=0; i<V; i++){
+        dist[i] = INT_MAX;
+    }
+
+    dist[src] = 0;
+
+    for(int i=0; i<V-1; i++){
+        
+        for(unsigned int j=0; j<g->edges_.size(); j++){
+            ListNode* e = g->edges_[j];
+            int u = e->src_;
+            int v = e->dest_;
+            int w = e->weight_;
+            if(dist[v]>dist[u]+w){
+                dist[v] = dist[u] + w;
+            }
+        }
+    }
+
+    std::cout << "BELLMANFORD OUTPUT : \n";
+    printDistances(dist, V);
+
+}
 
 
 
