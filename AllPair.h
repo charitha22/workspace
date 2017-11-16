@@ -1,6 +1,7 @@
 #ifndef _ALLPAIRS_H_
 #define _ALLPAIRS_H_
 #include<vector>
+#include<map>
 using namespace std;
 
 class ListNode{
@@ -20,7 +21,9 @@ public:
     vector<AdjList*> vertices_; // adjacency list for each vertice
     vector<ListNode*> edges_;
     vector<vector<int>> adj_mat_;
-
+    
+    map<int, vector<int>> bford_results_;
+    map<int, vector<int>> dij_results_;
     void addEdge(int src, int dest, int weight);
 };
 
@@ -53,4 +56,5 @@ bool runBellmanFord(Graph* g, int src);
 void printDistances(int* dist, int V);
 void printDistances(vector<vector<int>>& dist);
 void runFloydWarshall(Graph* g);
+void runJhonsons(Graph* g);
 #endif

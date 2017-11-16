@@ -46,15 +46,18 @@ Graph* gen_test_graph(int V){
 int main(){
 	int V = 9;
 	int src = 0;
-	Graph * g = gen_test_graph(V);
-    
+	
+    Graph * g1 = gen_test_graph(V);
     std::cout << "INPUT :\n";
-    printDistances(g->adj_mat_);
-	runDijkstra(g, src);
-    runBellmanFord(g, src);
-    runFloydWarshall(g);
+    printDistances(g1->adj_mat_);
+	//runDijkstra(g, src);
+    //runBellmanFord(g, src);
+    runFloydWarshall(g1);
+    
+    Graph * g2 = gen_test_graph(V);
+    runJhonsons(g2);
 
-	delete g;
+	delete g1, g2;
 	return 0;
 }
 

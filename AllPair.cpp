@@ -1,5 +1,6 @@
 #include "AllPair.h"
 #include <vector>
+#include <cassert>
 #include <stdlib.h>
 #include <iostream>
 #define INT_MAX 999999
@@ -185,8 +186,18 @@ void runDijkstra(Graph* g, int src){
 	
 	}
 
-    std::cout << "DIJKSTRA OUTPUT : \n"; 
-	printDistances(dist, V);
+    // store result
+    vector<int> temp;
+    for(int i=0; i<V; i++){
+        temp.push_back(dist[i]);
+    }
+
+    g->dij_results_.insert(std::pair<int, vector<int>>(src, temp));
+
+    //std::cout << "DIJKSTRA OUTPUT : \n"; 
+	//printDistances(dist, V);
+
+
 
 }
 
@@ -231,12 +242,81 @@ bool runBellmanFord(Graph* g, int src){
         }
     }
 
-    std::cout << "BELLMANFORD OUTPUT : \n";
-    printDistances(dist, V);
+    //std::cout << "BELLMANFORD OUTPUT : \n";
+    //printDistances(dist, V);
 
+        // check for negative cycles
+    for(unsigned int i=0; i<g->edges_.size(); i++){
+        ListNode* e = g->edges_[i];
+        int u = e->src_;
+        int v = e->dest_;
+        int w = e->weight_;
+        if(dist[v]>dist[u]+w){
+            return false;
+        }
+    }
+    
+    // update results
+    vector<int> result;
+    for(int i=0; i<V; i++){
+        result.push_back(dist[i]);
+    }
+    g->bford_results_.insert(std::pair<int, vector<int>>(src, result));
+ 
+
+    return true;
 }
 
 
+void runJhonsons(Graph* g){
+        
+    // create a new graph 
+    Graph new_g(g->size_+1);
+    int new_vid = g->size_;
+
+    // add new edges
+    for(unsigned int i=0; i>g->edges_.size(); i++){
+        ListNode* e = g->edges_[i];
+        new_g.addEdge(e->src_, e->dest_, e->weight_);
+    }
+    for(int i=0; i<g->size_; i++){
+        new_g.addEdge(new_vid, i, 0);
+    }
+
+    if(!runBellmanFord(&new_g, new_vid)){
+        std::cout << "graph contains negative weight cycles\n";
+        return;
+    }
+    
+    map<int, vector<int>>::iterator it = new_g.bford_results_.find(new_vid);
+    assert(it!=new_g.bford_results_.end());
+
+    vector<int> h_vec = it->second;
+    assert(h_vec.size()==new_g.size_);
+
+
+    vector<vector<int>> d = g->adj_mat_;
+
+    for(unsigned int i=0; i<g->edges_.size(); i++){
+        int u = g->edges_[i]->src_;
+        int v = g->edges_[i]->dest_;
+        g->edges_[i]->weight_ = g->edges_[i]->weight_ + h_vec[u] - h_vec[v];
+    }
+
+    for(int i=0; i<g->size_; i++){
+        runDijkstra(g, i);
+        vector<int> result = g->dij_results_[i];
+        for(int j=0; j<g->size_; j++){
+            d[i][j] = result[j] + h_vec[j]-h_vec[i];
+        }
+    }
+    
+    std::cout << "JHONSONS OUTPUT : \n";
+    printDistances(d);
+   
+
+
+}
 
 
 
