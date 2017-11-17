@@ -2,6 +2,7 @@
 #include <iostream>
 #include "AllPair.h"
 #include <chrono>
+#include <random>
 using namespace std;
 using namespace std::chrono;
 
@@ -42,10 +43,7 @@ Graph* gen_test_graph(int V){
 	return g;
 }
 
-
-
-
-int main(){
+void run_test(){
 	int V = 9;
 	int src = 0;
 
@@ -71,6 +69,75 @@ int main(){
 
 
 	delete g1, g2;
+
+
+}
+
+Graph* gen_random_graph(int V, double ratio){
+	
+	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+	std::default_random_engine generator(seed1);
+	std::uniform_int_distribution<int> distribution(1,1000);
+
+	Graph * new_g = new Graph(V);
+	for(int i =0; i<V; i++){
+		for(int j=0; j<V; j++){
+			if(i==j) continue;
+			
+			int rnum = distribution(generator);
+			double prob = (double)rnum/1000;
+
+			// add edge 
+			if(prob<=ratio){
+				int w = distribution(generator);
+				new_g->addEdge(i, j, w);
+			}
+
+
+		}
+	}
+
+
+	cout << "no of vertices = " << new_g->size_ << "\n";
+	cout << "no of edges = " << new_g->edges_.size() << "\n";
+	
+	return new_g;
+
+
+
+}
+
+int main(){
+	//run_test();
+	
+	
+	Graph* g = gen_random_graph(100, 0.9);
+	//Graph* g = gen_test_graph(9);
+    //std::cout << "INPUT :\n";
+    //printDistances(g->adj_mat_);
+	
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    runFloydWarshall(g);
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+   
+    auto fw_time = duration_cast<microseconds>( t2 - t1 ).count();
+    cout << "Time for floyd warshall : " << fw_time << " us\n";
+
+	high_resolution_clock::time_point t3 = high_resolution_clock::now();
+    runJhonsons(g);
+    high_resolution_clock::time_point t4 = high_resolution_clock::now();
+   
+    auto j_time = duration_cast<microseconds>( t4 - t3 ).count();
+    cout << "Time for Jhonson : " << j_time << " us\n";
+	
+	high_resolution_clock::time_point t5 = high_resolution_clock::now();
+    runHybrid(g);
+    high_resolution_clock::time_point t6 = high_resolution_clock::now();
+   
+    auto h_time = duration_cast<microseconds>( t6 - t5 ).count();
+    cout << "Time for Hybrid : " << h_time << " us\n";
+
+
 	return 0;
 }
 

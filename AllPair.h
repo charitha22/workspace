@@ -17,6 +17,7 @@ typedef std::vector<ListNode*> AdjList;
 class Graph{
 public:
     Graph(int size);
+	Graph(Graph* g);
     int size_; // size of graph
     vector<AdjList*> vertices_; // adjacency list for each vertice
     vector<ListNode*> edges_;
@@ -56,5 +57,6 @@ bool runBellmanFord(Graph* g, int src);
 void printDistances(int* dist, int V);
 void printDistances(vector<vector<int>>& dist);
 void runFloydWarshall(Graph* g);
-void runJhonsons(Graph* g);
+void runJhonsons(Graph* gg);
+void runHybrid(Graph* g);
 #endif

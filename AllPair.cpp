@@ -2,6 +2,7 @@
 #include <vector>
 #include <cassert>
 #include <stdlib.h>
+#include <math.h>
 #include <iostream>
 #define INT_MAX 999999
 using namespace std;
@@ -28,6 +29,12 @@ Graph::Graph(int size){
     
 }
 
+Graph::Graph(Graph* g){
+	adj_mat_ = g->adj_mat_;
+	vertices_ = g->vertices_;
+	edges_ = g->edges_;
+	size_ = g->size_;
+}
 void Graph::addEdge(int src, int dest, int weight ){
     ListNode* fwd_nd = new ListNode(src, dest, weight);
     vertices_[src]->push_back(fwd_nd);
@@ -214,8 +221,8 @@ void runFloydWarshall(Graph* g){
         }
     }
     
-    std::cout << "FLOYDWARSHALL OUTPUT : \n";
-    printDistances(dist);
+    //std::cout << "FLOYDWARSHALL OUTPUT : \n";
+    //printDistances(dist);
 }
 
 
@@ -268,8 +275,9 @@ bool runBellmanFord(Graph* g, int src){
 }
 
 
-void runJhonsons(Graph* g){
+void runJhonsons(Graph* gg){
         
+	Graph* g = new Graph(gg);
     // create a new graph 
     Graph new_g(g->size_+1);
     int new_vid = g->size_;
@@ -311,14 +319,31 @@ void runJhonsons(Graph* g){
         }
     }
     
-    std::cout << "JHONSONS OUTPUT : \n";
-    printDistances(d);
+    //std::cout << "JHONSONS OUTPUT : \n";
+    //printDistances(d);
    
 
 
 }
 
 
+void runHybrid(Graph* g){
+	
+	int V = g->size_;
+	int E = g->edges_.size();
+
+	double fw_cost = (double)V*V*V;	
+	double jsn_cost = (double)V*E*log((double)V);
+
+	if(jsn_cost<fw_cost){
+		runJhonsons(g);
+	}
+	else{
+		runFloydWarshall(g);
+	}
+
+
+}
 
 
 
