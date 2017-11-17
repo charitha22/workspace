@@ -59,7 +59,7 @@ int main(){
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
    
     auto fw_time = duration_cast<microseconds>( t2 - t1 ).count();
-    cout << "Time for floyd warshall : " << fw_time << " ms\n";
+    cout << "Time for floyd warshall : " << fw_time << " us\n";
 
     Graph * g2 = gen_test_graph(V);
     high_resolution_clock::time_point t3 = high_resolution_clock::now();
@@ -67,7 +67,7 @@ int main(){
     high_resolution_clock::time_point t4 = high_resolution_clock::now();
     
     auto j_time = duration_cast<microseconds>( t4 - t3 ).count();
-    cout << "Time for jhonsons : " <<  j_time << "ms\n";
+    cout << "Time for jhonsons : " <<  j_time << " us\n";
 
 
 	delete g1, g2;
