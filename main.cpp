@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include "AllPair.h"
-
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
 
 Graph* gen_test_graph(int V){
 	
@@ -46,16 +48,27 @@ Graph* gen_test_graph(int V){
 int main(){
 	int V = 9;
 	int src = 0;
-	
+
     Graph * g1 = gen_test_graph(V);
     std::cout << "INPUT :\n";
     printDistances(g1->adj_mat_);
 	//runDijkstra(g, src);
     //runBellmanFord(g, src);
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
     runFloydWarshall(g1);
-    
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+   
+    auto fw_time = duration_cast<microseconds>( t2 - t1 ).count();
+    cout << "Time for floyd warshall : " << fw_time << " ms\n";
+
     Graph * g2 = gen_test_graph(V);
+    high_resolution_clock::time_point t3 = high_resolution_clock::now();
     runJhonsons(g2);
+    high_resolution_clock::time_point t4 = high_resolution_clock::now();
+    
+    auto j_time = duration_cast<microseconds>( t4 - t3 ).count();
+    cout << "Time for jhonsons : " <<  j_time << "ms\n";
+
 
 	delete g1, g2;
 	return 0;

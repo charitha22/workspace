@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-g
+CFLAGS=-g -O0
 
 all:
 	$(CC) $(CFLAGS) -c AllPair.cpp -o AllPair.o
