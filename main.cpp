@@ -111,11 +111,16 @@ int main(){
 	//run_test();
 	
 	
-	Graph* g = gen_random_graph(100, 0.9);
+	Graph* g = gen_random_graph(100, 0.3);
 	//Graph* g = gen_test_graph(9);
     //std::cout << "INPUT :\n";
     //printDistances(g->adj_mat_);
-	
+    
+    int E = g->edges_.size();
+    int V = g->size_;
+    double EEmax_ratio = (double)(E)/ (double)(V*(V-1));
+    cout << "|E|/|E_max| = " << EEmax_ratio << "\n";
+
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
     runFloydWarshall(g);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
