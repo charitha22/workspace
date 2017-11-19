@@ -107,11 +107,14 @@ Graph* gen_random_graph(int V, double ratio){
 
 }
 
-int main(){
+int main(int argc, char** argv){
 	//run_test();
 	
-	
-	Graph* g = gen_random_graph(100, 0.3);
+    int size = atoi(argv[1]);
+    double r = atof(argv[2]);
+
+    	
+	Graph* g = gen_random_graph(size, r);
 	//Graph* g = gen_test_graph(9);
     //std::cout << "INPUT :\n";
     //printDistances(g->adj_mat_);
@@ -135,7 +138,7 @@ int main(){
     auto j_time = duration_cast<microseconds>( t4 - t3 ).count();
     cout << "Time for Jhonson : " << j_time << " us\n";
 	
-	high_resolution_clock::time_point t5 = high_resolution_clock::now();
+    high_resolution_clock::time_point t5 = high_resolution_clock::now();
     runHybrid(g);
     high_resolution_clock::time_point t6 = high_resolution_clock::now();
    

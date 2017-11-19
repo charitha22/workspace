@@ -332,10 +332,11 @@ void runHybrid(Graph* g){
 	int V = g->size_;
 	int E = g->edges_.size();
 
-	double fw_cost = (double)V*V*V;	
-	double jsn_cost = (double)V*E*log2((double)V);
-
-	if(jsn_cost<fw_cost){
+	double ratio = (double)(E/(double)(V*(V-1)));
+    //double fw_cost = (double)V*V*V;	
+	//double jsn_cost = (double)V*E*log2((double)V);
+    
+	if(ratio<0.4){
 		runJhonsons(g);
 	}
 	else{
