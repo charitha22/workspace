@@ -1,4 +1,4 @@
-#include "AllPair.h"
+#include "Graph.h"
 #include <vector>
 #include <cassert>
 #include <stdlib.h>

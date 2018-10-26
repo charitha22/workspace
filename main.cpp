@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
-#include "AllPair.h"
+#include "Graph.h"
 #include <chrono>
 #include <random>
 using namespace std;
@@ -109,7 +109,11 @@ Graph* gen_random_graph(int V, double ratio){
 
 int main(int argc, char** argv){
 	//run_test();
-	
+    
+    if(argc < 3){
+        printf("Error : not enough arguments\n ./<executable> grap_size edge_ratio \n");
+        return -1;
+    }
     int size = atoi(argv[1]);
     double r = atof(argv[2]);
 
