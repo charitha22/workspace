@@ -39,3 +39,29 @@ int MatrixChainMult(std::vector<int>& p){
     return M[0][N-1];
 }
 
+int EditDistance(string s1, string s2){
+    int l1 = s1.length();
+    int l2 = s2.length();
+    int table[l1+1][l2+1];
+
+    for(int i=0; i<l1+1; i++) table[i][0] = i;
+    for(int i=0; i<l2+1; i++) table[0][i] = i;
+
+    
+    for(int i=1; i<l1+1; i++){
+        for(int j=1; j<l2+1; j++){
+            if(s1[i-1] == s2[j-1]) table[i][j] = table[i-1][j-1];
+            else{
+                table[i][j] = MIN(table[i-1][j-1] , MIN(table[i-1][j], table[i][j-1]))+1;
+            }
+        }
+    }
+
+    //for (int i=0; i<l1+1; i++){
+        //for(int j=0; j<l2+1; j++){
+            //cout << table[i][j]  << " ";
+        //}
+        //cout << "\n";
+    //}
+    return table[l1][l2];
+}
