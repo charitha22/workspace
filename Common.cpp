@@ -65,3 +65,62 @@ int EditDistance(string s1, string s2){
     //}
     return table[l1][l2];
 }
+
+
+
+int CoverDistance(std::vector<int>& steps, int N){
+    int storage[N+1];
+    
+    for(int i=0; i<=N; i++) storage[i] = 0;
+    storage[0] = 1;
+    
+    for(int i=1; i<=N; i++){
+        for(auto s: steps){
+            if(i-s >= 0) storage[i] += storage[i-s];
+        }
+    }
+
+    return storage[N];
+}
+
+
+int SubSetSum(vector<int>& set, int S){
+    bool storage[set.size()+1][S+1];
+
+    for(int i=0; i<set.size()+1; i++)
+        for(int j=0; j<S+1; j++)
+            storage[i][j] = false;
+    
+    for(int i=0; i<set.size(); i++) storage[1][set[i]] = true;
+
+    for(int i=2; i<=set.size(); i++){
+        for(int j=1; j<=S; j++){
+            if(j<set[i]) storage[i][j] = storage[i-1][j];
+            else if(j>=set[i]) storage[i][j] = storage[i-1][j] | storage[i-1][j-set[i]];
+        }
+    }
+
+    for(int i=0; i<set.size()+1; i++){
+        for(int j=0; j<S+1; j++){
+            cout << storage[i][j] << " ";
+        }
+        cout << "\n";
+    }
+
+
+    return storage[set.size()][S];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

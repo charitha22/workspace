@@ -48,8 +48,33 @@ void run_edit(){
 
 }
 
+void run_distcover(){
+    std::vector<int> steps;
+    steps.push_back(1);
+    steps.push_back(2);
+    steps.push_back(3);
+    
+    cout << "No of ways to cover the distance = \n " << CoverDistance(steps, 3) << "\n";
+    cout << "No of ways to cover the distance = \n " << CoverDistance(steps, 4) << "\n";
+    
+
+}
+
+void run_subsetsum(){
+    std::vector<int> set;
+    set.push_back(3);
+    set.push_back(34);
+    set.push_back(4);
+    set.push_back(12);
+    set.push_back(5);
+    set.push_back(2);
+    cout << "subset sum result : \n" << SubSetSum(set, 9) << "\n";
+}
+
 int main(){
     //run_marix_chain_mult();
-    run_edit();
+    //run_edit();
+    //run_distcover();
+    run_subsetsum();
     return 0;
 }
