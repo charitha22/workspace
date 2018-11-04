@@ -70,11 +70,28 @@ void run_subsetsum(){
     set.push_back(2);
     cout << "subset sum result : \n" << SubSetSum(set, 9) << "\n";
 }
+void run_knapsack(){
+    vector<int> W {10, 20, 30};
+    vector<int> V {60, 100, 120};
+    cout << "Max value in Knapsack : \n" << KnapSack(V, W, 50) << "\n";
+}
+
+void run_coinchange(){
+    vector<int> coins {1,2,3};
+    cout << "No of ways to change 4 : \n" << CoinChange(coins, 4) << endl;
+
+
+    vector<int> coins1 {2,5,3,6};
+    cout << "No of ways to change 10 : \n" << CoinChange(coins1, 10) << endl;
+
+}
 
 int main(){
     //run_marix_chain_mult();
     //run_edit();
     //run_distcover();
-    run_subsetsum();
+    //run_subsetsum();
+    //run_knapsack();
+    run_coinchange();
     return 0;
 }

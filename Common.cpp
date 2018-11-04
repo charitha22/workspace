@@ -1,9 +1,14 @@
 #include "Common.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 int MIN(int a, int b){
     if(a<b) return a;
     return b;
+}
+int MAX(int a, int b){
+    if(a<b) return b;
+    return a;
 }
 int RowsOf(std::vector<int>& p, int i) {
     return p[i];
@@ -111,7 +116,49 @@ int SubSetSum(vector<int>& set, int S){
     return storage[set.size()][S];
 }
 
+int KnapSack(vector<int>& V, vector<int>& W, int C){
 
+    int S[V.size()+1][C+1];
+    
+    for(int i=0; i<C+1; i++) S[0][i] = 0;
+    
+    for(int i=1; i<V.size()+1; i++){
+        for(int j=1; j<C+1; j++){
+            if(W[i] > j) S[i][j] = 0;
+            else S[i][j] = MAX(S[i-1][j], S[i-1][j-W[i]]+V[i]);
+        }
+    }
+    return S[V.size()][C];
+}
+
+
+int CoinChange(vector<int>& S, int V){
+
+    int T[S.size()+1][V+1];
+
+    for(int i=0; i<V+1; i++) T[0][i] = 0;
+    for(int i=0; i<S.size()+1; i++) {
+        T[i][0] = 1;
+    }
+    for(int i=1; i<S.size()+1; i++){
+        for(int j=1; j<V+1; j++){
+            int x  = 0;
+            if(S[i-1] <= j) x = T[i][j-S[i-1]];
+            T[i][j] = x + T[i-1][j];
+        }
+    }
+
+    
+    //for(int i=1; i<S.size()+1; i++){
+        //for(int j=1; j<V+1; j++){
+            //cout << T[i][j] << " ";
+        //}
+        //cout << endl;
+    //}
+       
+
+    return T[S.size()][V];
+}
 
 
 
