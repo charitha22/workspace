@@ -160,14 +160,108 @@ int CoinChange(vector<int>& S, int V){
     return T[S.size()][V];
 }
 
+int LCS(string s1, string s2){
+    int l1 = s1.length();
+    int l2 = s2.length();
+
+    int S[l1+1][l2+1];
+
+    for(int i=0; i<=l1; i++) S[i][0] = 0;
+    for(int i=0; i<=l2; i++) S[0][i] = 0;
+
+    for(int i=1; i<=l1; i++){
+        for(int j=1; j<=l2; j++){
+            if(s1[i-1] == s2[j-1]) S[i][j] = S[i-1][j-1] + 1;
+            else S[i][j] = MAX(S[i-1][j] , S[i][j-1]);
+        }
+    }
+
+    return S[l1][l2];
+}
+
+int ShortestSuperSequence(string s1, string s2){
+    int l = LCS(s1, s2);
+
+    return s1.length()+s2.length()-l;
+}
+
+void Merge(int * arr, int l, int m, int h){
+
+    int l1 = m-l+1;
+    int l2 = h-m;
+
+    int L[l1];
+    int R[l2];
+    for(int i=0; i<l1; i++) L[i] = arr[l+i];
+    for(int i=0; i<l2; i++) R[i] = arr[m+1+i];
+
+    int i = 0;
+    int j = 0;
+    int k = l;
+    while(i<l1 && j<l2){
+        if(L[i] <= R[j]){
+            arr[k] = L[i];
+            i++;
+        }
+        else{
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    for(int a=i; a<l1; a++) arr[k++] = L[a];
+    for(int a=j; a<l2; a++) arr[k++] = R[a];
+   
+}
 
 
+void MergeSort(int* arr, int l, int h){
+    
+    if(l<h){
+        int mid = (l+h)/2;
+        
+        MergeSort(arr, l, mid);
+        MergeSort(arr, mid+1, h);
+        
+        Merge(arr, l, mid, h);
+    }
+}
+
+void swap(int* x, int* y){
+    int temp  = *x;
+    *x = *y;
+    *y = temp;
+}
+
+int QSPartition(int * arr, int l, int h){
+
+    int pivot = arr[h];
+    int i  = l;
+    for(int j=l; j<=h-1; j++){
+        if(arr[j] < pivot){
+            if(j!=i) swap(&arr[i], &arr[j]);
+            i++;
+        }
+    }
+    swap(&arr[i], &arr[h]);
+    //for(auto i=l ;i<=h; i++) cout << arr[i] << " " ;
+    //cout << endl;
 
 
+    return i;
+    
+}
 
 
+void QuickSort(int* arr, int l, int h){
+    if(l<h){
+        int p = QSPartition(arr, l, h);  
+        QuickSort(arr, l, p-1);
+        QuickSort(arr, p+1, h);
+    }
 
-
+}
 
 
 

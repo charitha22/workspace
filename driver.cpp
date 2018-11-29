@@ -86,12 +86,57 @@ void run_coinchange(){
 
 }
 
+void run_superseq(){
+    string s1 = "geek";
+    string s2 = "eke";
+
+    cout << "Length of shortest super sequence : \n" << ShortestSuperSequence(s1, s2) << endl;
+
+    s1 = "AGGTAB"; 
+    s2 = "GXTXAYB"; 
+    
+    cout << "Length of shortest super sequence : \n" << ShortestSuperSequence(s1, s2) << endl;
+}
+
+void run_msort(){
+
+    int arr[10] = {3,33,24,5,1,55,788,321,45,76};
+    cout  << "Before Sorting : " << endl;
+    for(auto i=0 ;i<10; i++) cout << arr[i] << " " ;
+    cout << endl;
+
+    MergeSort(arr, 0, 9);
+
+    cout  << "After Sorting : " << endl;
+    for(auto i=0 ;i<10; i++) cout << arr[i] << " " ;
+    cout << endl;
+
+}
+
+void run_qsort(){
+    int arr[10] = {3,33,24,5,1,55,788,321,45,76};
+    cout  << "Before Sorting : " << endl;
+    for(auto i=0 ;i<10; i++) cout << arr[i] << " " ;
+    cout << endl;
+
+    QuickSort(arr, 0, 9);
+
+    cout  << "After Sorting : " << endl;
+    for(auto i=0 ;i<10; i++) cout << arr[i] << " " ;
+    cout << endl;
+
+
+}
+
 int main(){
     //run_marix_chain_mult();
     //run_edit();
     //run_distcover();
     //run_subsetsum();
     //run_knapsack();
-    run_coinchange();
+    //run_coinchange();
+    //run_superseq();
+    //run_msort();
+    run_qsort();
     return 0;
 }
