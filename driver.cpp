@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-void run_marix_chain_mult(){
+void run_matrix_chain_mult(){
     
     std::vector<int> p;
     p.push_back(40);
@@ -128,8 +128,37 @@ void run_qsort(){
 
 }
 
+void run_matrix_chain_mult_recur(){
+    std::vector<int> p;
+    p.push_back(40);
+    p.push_back(20);
+    p.push_back(30);
+    p.push_back(10);
+    p.push_back(30);
+    cout << "Test case 1 \n";
+    cout << "No of Multiplications : \n" << MatrixChainMultRecur(p) << "\n";
+
+    p.clear();
+    p.push_back(10);
+    p.push_back(20);
+    p.push_back(30);
+    p.push_back(40);
+    p.push_back(30);
+
+    cout << "Test case 2 \n";
+    cout << "No of Multiplications : \n" << MatrixChainMultRecur(p) << "\n";
+    
+    p.clear();
+    p.push_back(10);
+    p.push_back(20);
+    p.push_back(30);
+    cout << "Test case 3 \n";
+    cout << "No of Multiplications : \n" << MatrixChainMultRecur(p) << "\n";
+
+}
+
 int main(){
-    //run_marix_chain_mult();
+    run_matrix_chain_mult();
     //run_edit();
     //run_distcover();
     //run_subsetsum();
@@ -137,6 +166,7 @@ int main(){
     //run_coinchange();
     //run_superseq();
     //run_msort();
-    run_qsort();
+    //run_qsort();
+    run_matrix_chain_mult_recur();
     return 0;
 }

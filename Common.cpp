@@ -263,5 +263,36 @@ void QuickSort(int* arr, int l, int h){
 
 }
 
+int NumMult(int i, int j, vector<vector<int>>& Storage, vector<int>& p){
+    if(Storage[i][j] != -1) return Storage[i][j];
+    
+    int min = 100000000;
+    for(int k=0; k<j-i; k++){
+        min = MIN(min, NumMult(i,i+k, Storage, p) +  NumMult(i+k+1, j, Storage, p) 
+                + RowsOf(p, i)*ColsOf(p, i+k)*ColsOf(p, j));
+    }
+    Storage[i][j] = min;
+    return min;
+}
+
+int MatrixChainMultRecur(std::vector<int>& p){
+    int N = p.size()-1;
+    vector<vector<int>> S;
+    
+    for(int i=0; i<N; i++){
+        vector<int> temp;
+        for(int j=0; j<N; j++) {
+            if(i==j) temp.push_back(0);
+            else temp.push_back(-1);
+        }
+        S.push_back(temp);
+    }
+
+    //cout << S[N-1][N-1] << endl;
+
+    //return 0;
+    return NumMult(0, N-1, S,p);
+}
+
 
 

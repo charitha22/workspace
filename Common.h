@@ -10,3 +10,4 @@ int CoinChange(vector<int>& S, int V);
 int ShortestSuperSequence(string s1, string s2);
 void MergeSort(int* arr, int l, int h);
 void QuickSort(int* arr, int l, int h);
+int MatrixChainMultRecur(std::vector<int>& p);
