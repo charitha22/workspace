@@ -14,5 +14,7 @@ This repository includes C++ implementations for,
 * Shortest Super Sequence
 * Merge Sort
 * Quick Sort
+* Greedy graph coloring
+* NN search using KD tree
 
 
