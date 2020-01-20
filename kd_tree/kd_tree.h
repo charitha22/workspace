@@ -6,6 +6,10 @@
 #include <time.h>       /* time */
 #include <algorithm>    // std::for_each
 #include <iostream>
+#include <limits>       // std::numeric_limits
+#include <math.h>
+
+static int inf = std::numeric_limits<int>::max();
 
 // T is the data type and N is the dimension of the point
 template <class T, size_t N>
@@ -33,12 +37,26 @@ public:
     }
 
     T get_value_at_dim(int dim) const {return pt[dim];}
+    
+    // compute distance to another point
+    double dist_to(point<T,N>& p){
+        double squared_dis = 0;
+        for(int i = 0; i < N; i++){
+            double diff = (double)abs(get_value_at_dim(i)  - p.get_value_at_dim(i));
+            squared_dis += diff*diff;
+        }
+
+        return sqrt(squared_dis);
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const point& p){
         os << "(" << p.pt[0];
         for(int i=1; i<N; i++) os << ", " << p.pt[i];
         os << ")";
         return os;
     }
+
+
 
 private :
     T pt[N];
@@ -94,6 +112,16 @@ public:
         insert_point(root, p, 0);
     }
 
+    // find the neareast neighbour for a given point
+    point<T,N>& find_nearest_neighbour(point<T,N>& p){
+        // set root as the current best
+        point<T,N>& current_best = root->data;
+
+        find_nearest_point(root, p, current_best,  0);
+
+        return current_best;
+    }
+
     // ostream operator for tree
     friend std::ostream& operator<<(std::ostream& os, const kd_tree<T,N>& tree){
         if(tree.root) {
@@ -104,6 +132,49 @@ public:
     
 private:
     kd_tree_node<T,N>* root = nullptr;
+
+    void find_nearest_point(kd_tree_node<T,N>* nd, point<T,N>& p,
+        point<T,N>& curr_best, int depth){
+        int curr_dim = depth % N;
+        // if node is not valid return
+        if(!nd) return;
+        
+        // update current best  
+        if(nd->data.dist_to(p) < curr_best.dist_to(p)){
+            curr_best = nd->data;
+        }
+
+        // current distance to nearest neighbour
+        double curr_min_dist = p.dist_to(curr_best);
+        
+        // if p[curr_dim] < nd->data[curr_dim] search left subtree first
+        if(p.get_value_at_dim(curr_dim) < nd->data.get_value_at_dim(curr_dim)){
+            // check if it makes sense to traverse left subtree
+            if(p.get_value_at_dim(curr_dim) - curr_min_dist 
+                    <= nd->data.get_value_at_dim(curr_dim)){
+                find_nearest_point(nd->left, p, curr_best, depth+1);
+            }
+            // check if it makes sense to traverser right subtree
+            if(p.get_value_at_dim(curr_dim) + curr_min_dist 
+                    > nd->data.get_value_at_dim(curr_dim)){
+                find_nearest_point(nd->right, p, curr_best, depth+1);      
+            } 
+        }
+        // otherwise traverse the right subtree first
+        else {
+            // check if it makes sense to traverser right subtree
+            if(p.get_value_at_dim(curr_dim) + curr_min_dist 
+                    > nd->data.get_value_at_dim(curr_dim)){
+                find_nearest_point(nd->right, p, curr_best, depth+1);      
+            }
+            // check if it makes sense to traverse left subtree
+            if(p.get_value_at_dim(curr_dim) - curr_min_dist 
+                    <= nd->data.get_value_at_dim(curr_dim)){
+                find_nearest_point(nd->left, p, curr_best, depth+1);
+            }
+        }
+
+    }
 
     bool search_node(kd_tree_node<T,N>* nd, 
         const point<T,N>& p, int depth){
