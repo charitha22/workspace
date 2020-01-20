@@ -15,6 +15,6 @@ This repository includes C++ implementations for,
 * Merge Sort
 * Quick Sort
 * Greedy graph coloring
-* NN search using KD tree
+* Nearest neighbor search using KD tree
 
 
