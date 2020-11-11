@@ -52,7 +52,7 @@ template<typename T>
 bool check_equal(T* A1, T* A2, int rows, int cols){
   for(int i = 0; i < rows; i++)
     for(int j = 0; j < cols; j++){
-      if(A1[i * cols + j] != A2[i * cols + j]){
+      if(abs(A1[i * cols + j] - A2[i * cols + j]) > 0.00001){
           return false;
       }
     }
@@ -87,7 +87,9 @@ int main(void)
 
   srand (time(NULL));
   auto rand_numbers = []() -> float {
-    return static_cast<float>(rand())/(static_cast<float>(RAND_MAX/1000));
+    auto f = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/1000));
+    int n = static_cast<int>(f);
+    return static_cast<float>(n);
   };
 
   initialize_matrix<float>(A, A_rows, A_cols, rand_numbers);
