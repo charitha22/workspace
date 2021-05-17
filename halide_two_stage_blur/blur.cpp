@@ -281,6 +281,36 @@ void partitioned_sliding_window(Image<T> &img, Image<T> &out)
     }
 }
 
+template <typename T>
+void partitioned_sliding_window_par(Image<T> &img, Image<T> &out)
+{
+    int partition_size = 64;
+    
+#pragma omp parallel for
+    for (int ti = 0; ti < out.y_max() / partition_size; ti++)
+    {
+        Image<T> blurx(3 + 2, X_MAX + 2);
+        for (int i = -2; i < partition_size; i++)
+        {
+            for (int j = 0; j < out.x_max(); j++)
+            {
+                blurx((i + 1) % 3, j) = (img(ti * partition_size + i + 1, j - 1) +
+                                         img(ti * partition_size + i + 1, j) +
+                                         img(ti * partition_size + i + 1, j + 1)) /
+                                        3;
+            }
+            if (i < 0)
+            {
+                continue;
+            }
+            for (int j = 0; j < out.x_max(); j++)
+            {
+                out(ti * partition_size + i, j) = (blurx((i - 1) % 3, j) + blurx((i) % 3, j) + blurx((i + 1) % 3, j)) / 3;
+            }
+        }
+    }
+}
+
 int main()
 {
 
@@ -386,6 +416,18 @@ int main()
     end = std::chrono::system_clock::now();
 
     std::cout << "tiled parallel elapsed time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+
+    std::cout << "verify : " << (out == out_bf ? "true" : "false") << "\n";
+
+    //  partitioned sliding window parallel
+    out.initialize_zero();
+    start = std::chrono::system_clock::now();
+
+    partitioned_sliding_window_par(img, out);
+
+    end = std::chrono::system_clock::now();
+
+    std::cout << "partitioned sliding window parallel elapsed time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
 
     std::cout << "verify : " << (out == out_bf ? "true" : "false") << "\n";
 
