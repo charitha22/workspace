@@ -158,6 +158,7 @@ void loop_fusion_par(Image<T> &img, Image<T> &out)
         for (int j = 0; j < out.x_max(); j++)
         {
             Image<T> blurx(1 + 2, 3 + 2);
+            #pragma omp simd
             for (int k = 0; k < 3; k++)
             {
                 blurx(0, k) = (img(i - 1 + k, j - 1) + img(i - 1 + k, j) + img(i - 1 + k, j + 1)) / 3;
@@ -232,6 +233,7 @@ void tiled_par(Image<T> &img, Image<T> &out)
             Image<T> blurx(tile_size + 2, tile_size + 2);
             for (int i = -1; i < tile_size + 1; i++)
             {
+                #pragma omp simd
                 for (int j = 0; j < tile_size; j++)
                 {
                     blurx(i, j) = (img(ti * tile_size + i, tj * tile_size + j - 1) +
@@ -243,6 +245,7 @@ void tiled_par(Image<T> &img, Image<T> &out)
 
             for (int i = 0; i < tile_size; i++)
             {
+                #pragma omp simd
                 for (int j = 0; j < tile_size; j++)
                 {
                     out(ti * tile_size + i, tj * tile_size + j) = (blurx(i - 1, j) + blurx(i, j) + blurx(i + 1, j)) / 3;
@@ -292,6 +295,7 @@ void partitioned_sliding_window_par(Image<T> &img, Image<T> &out)
         Image<T> blurx(3 + 2, X_MAX + 2);
         for (int i = -2; i < partition_size; i++)
         {
+            #pragma omp simd
             for (int j = 0; j < out.x_max(); j++)
             {
                 blurx((i + 1) % 3, j) = (img(ti * partition_size + i + 1, j - 1) +
@@ -303,6 +307,7 @@ void partitioned_sliding_window_par(Image<T> &img, Image<T> &out)
             {
                 continue;
             }
+            #pragma omp simd
             for (int j = 0; j < out.x_max(); j++)
             {
                 out(ti * partition_size + i, j) = (blurx((i - 1) % 3, j) + blurx((i) % 3, j) + blurx((i + 1) % 3, j)) / 3;
