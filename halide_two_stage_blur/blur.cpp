@@ -148,6 +148,27 @@ void loop_fusion(Image<T> &img, Image<T> &out)
 }
 
 template <typename T>
+void loop_fusion_par(Image<T> &img, Image<T> &out)
+{
+
+#pragma omp parallel for
+    for (int i = 0; i < out.y_max(); i++)
+    {
+
+        for (int j = 0; j < out.x_max(); j++)
+        {
+            Image<T> blurx(1 + 2, 3 + 2);
+            for (int k = 0; k < 3; k++)
+            {
+                blurx(0, k) = (img(i - 1 + k, j - 1) + img(i - 1 + k, j) + img(i - 1 + k, j + 1)) / 3;
+            }
+
+            out(i, j) = (blurx(0, 0) + blurx(0, 1) + blurx(0, 2)) / 3;
+        }
+    }
+}
+
+template <typename T>
 void sliding_window(Image<T> &img, Image<T> &out)
 {
     Image<T> blurx(3 + 2, X_MAX + 2);
@@ -177,6 +198,38 @@ void tiled(Image<T> &img, Image<T> &out)
     {
         for (int tj = 0; tj < out.x_max() / tile_size; tj++)
         {
+            for (int i = -1; i < tile_size + 1; i++)
+            {
+                for (int j = 0; j < tile_size; j++)
+                {
+                    blurx(i, j) = (img(ti * tile_size + i, tj * tile_size + j - 1) +
+                                   img(ti * tile_size + i, tj * tile_size + j) +
+                                   img(ti * tile_size + i, tj * tile_size + j + 1)) /
+                                  3;
+                }
+            }
+
+            for (int i = 0; i < tile_size; i++)
+            {
+                for (int j = 0; j < tile_size; j++)
+                {
+                    out(ti * tile_size + i, tj * tile_size + j) = (blurx(i - 1, j) + blurx(i, j) + blurx(i + 1, j)) / 3;
+                }
+            }
+        }
+    }
+}
+
+template <typename T>
+void tiled_par(Image<T> &img, Image<T> &out)
+{
+    int tile_size = (int)TILE_SIZE;
+#pragma omp parallel for
+    for (int ti = 0; ti < out.y_max() / tile_size; ti++)
+    {
+        for (int tj = 0; tj < out.x_max() / tile_size; tj++)
+        {
+            Image<T> blurx(tile_size + 2, tile_size + 2);
             for (int i = -1; i < tile_size + 1; i++)
             {
                 for (int j = 0; j < tile_size; j++)
@@ -309,6 +362,30 @@ int main()
     end = std::chrono::system_clock::now();
 
     std::cout << "breadth first parallel elapsed time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+
+    std::cout << "verify : " << (out == out_bf ? "true" : "false") << "\n";
+
+    // loop fusion parallel
+    out.initialize_zero();
+    start = std::chrono::system_clock::now();
+
+    loop_fusion_par(img, out);
+
+    end = std::chrono::system_clock::now();
+
+    std::cout << "loop fusion parallel elapsed time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+
+    std::cout << "verify : " << (out == out_bf ? "true" : "false") << "\n";
+
+    // tiled parallel
+    out.initialize_zero();
+    start = std::chrono::system_clock::now();
+
+    tiled_par(img, out);
+
+    end = std::chrono::system_clock::now();
+
+    std::cout << "tiled parallel elapsed time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
 
     std::cout << "verify : " << (out == out_bf ? "true" : "false") << "\n";
 
