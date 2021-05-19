@@ -258,7 +258,7 @@ void tiled_par(Image<T> &img, Image<T> &out)
 template <typename T>
 void partitioned_sliding_window(Image<T> &img, Image<T> &out)
 {
-    int partition_size = 8;
+    int partition_size = 64;
     Image<T> blurx(3 + 2, X_MAX + 2);
 
     for (int ti = 0; ti < out.y_max() / partition_size; ti++)

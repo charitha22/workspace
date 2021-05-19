@@ -7,4 +7,4 @@ clang++ :
 	clang++ -O3 -fopenmp blur.cpp -o blur_clang
 
 clean : 
-	rm -f blur
+	rm -f blur_g++ blur_clang
